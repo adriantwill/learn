@@ -66,20 +66,24 @@ class DecisionTree:
         right_node = self.fit(X[best_split:], y[best_split:], depth + 1, regression)
         return DecisionTreeNode(split, left_node, right_node)
 
-    def predict(self, root, val):
-        while root.left or root.right:
-            if val <= root.val:
-                root = root.left
-            else:
-                root = root.right
-        return root.val
+    def predict(self, root, vals):
+        pred = []
+        for val in vals:
+            curr = root
+            while curr.left or curr.right:
+                if val <= curr.val:
+                    curr = curr.left
+                else:
+                    curr = curr.right
+            pred.append(curr.val)
+        return torch.tensor(pred)
 
 
 def main():
     inputs, targets, _, _ = load_data()
     tree = DecisionTree(5)
     root = tree.fit(inputs, targets)
-    pred = tree.predict(root, 100)
+    pred = tree.predict(root, [100])
     print(pred)
 
 
