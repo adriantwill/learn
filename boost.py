@@ -5,8 +5,9 @@ from util import load_data
 
 
 class BoostedTree:
-    def __init__(self, num_models=3):
+    def __init__(self, num_models=3, learning_rate=1):
         self.num_models = num_models
+        self.learning_rate = learning_rate
 
     def fit(self, X, y):
         ans = torch.zeros((X.size(0), 1))
@@ -14,6 +15,7 @@ class BoostedTree:
             tree = DecisionTree(max_depth=10)
             root = tree.fit(X, y)
             pred = tree.predict(root, X).reshape(-1, 1)
+            pred *= self.learning_rate
             ans += pred
             y = y - pred
         return ans
@@ -21,12 +23,8 @@ class BoostedTree:
 
 def main():
     X, y, _, _ = load_data()
-    print(y)
-    tree2 = DecisionTree(max_depth=10)
-    root2 = tree2.fit(X, y2)
-    pred2 = tree2.predict(root2, X).reshape(-1, 1)
-    print(pred2)
-    print(pred1 + pred2)
+    tree = BoostedTree(3)
+    print(tree.fit(X, y))
 
 
 if __name__ == "__main__":

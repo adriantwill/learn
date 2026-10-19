@@ -14,7 +14,11 @@ def load_data():
 
 
 def main():
-    load_data()
+    X, y, w, b = load_data()
+    # print(X[0])
+    x = torch.randn(4)
+    y = torch.randn(4)
+    print(torch.dist(x, y, 3.5))
 
 
 if __name__ == "__main__":
